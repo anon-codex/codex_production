@@ -1,0 +1,50 @@
+.app-footer {
+  /* background-color: #101820; */
+  /* color: #fff; */
+  padding: 40px 20px 20px;
+  text-align: center;
+  font-family: "Segoe UI", sans-serif;
+  /* border-top: 4px solid #f04e23; */
+}
+
+.app-footer .footer-top {
+  margin-bottom: 20px;
+}
+
+.app-footer .footer-links {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.app-footer .footer-links a {
+  /* color: #ddd; */
+  color: black;
+  text-decoration: none;
+  font-size: 16px;
+  transition: color 0.3s ease;
+}
+
+.app-footer .footer-links a:hover {
+  /* color: #ffffff; */
+  text-decoration: underline;
+}
+
+.app-footer .footer-bottom {
+  font-size: 14px;
+  /* color: #aaa; */
+  margin-top: 10px;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .app-footer .footer-links {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .app-footer .footer-bottom {
+    font-size: 13px;
+  }
+}
