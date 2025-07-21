@@ -1,6 +1,6 @@
 FROM node:20-slim
 
-# Install Chrome and deps (same as before)
+# Install Chrome and dependencies
 RUN apt-get update && apt-get install -y \
   wget \
   gnupg \
@@ -22,6 +22,7 @@ RUN apt-get update && apt-get install -y \
   xdg-utils \
   python3 \
   python3-pip \
+  curl \
   --no-install-recommends \
   && apt-get clean && rm -rf /var/lib/apt/lists/*
 
@@ -32,18 +33,25 @@ RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add
   && apt-get install -y google-chrome-stable \
   && rm -rf /var/lib/apt/lists/*
 
-# Install yt-dlp via pip
-RUN pip3 install yt-dlp
+# ✅ Install yt-dlp via apt (safe method)
+RUN apt-get update && apt-get install -y yt-dlp \
+  && rm -rf /var/lib/apt/lists/*
 
+# Set working directory
 WORKDIR /usr/src/app
 
+# Install Node.js dependencies
 COPY package*.json ./
 RUN npm ci
 
+# Copy rest of the files
 COPY . .
 
+# Build React frontend (assuming it's under /frontend and linked in package.json)
 RUN npm run build
 
+# Set Puppeteer executable path
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome-stable
 
+# Start the Node.js app
 CMD ["npm", "start"]
