@@ -16,7 +16,7 @@ const Instadown = () => {
     setVideoData(null);
 
     try {
-      const res = await axios.post("http://localhost:8080/api/insta", {
+      const res = await axios.post("https://codex-production-1.onrender.com/api/insta", {
         videoURL: url,
       });
       const jwt = res.data.jwt_token;
@@ -37,7 +37,7 @@ const Instadown = () => {
     setDownloading(true);
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/download_insta",
+        "https://codex-production-1.onrender.com/api/download_insta",
         { videoUrl, title },
         {
           headers: {

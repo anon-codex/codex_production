@@ -47,7 +47,7 @@ const Youtube = () => {
 
     axios
       .post(
-        "http://localhost:8080/api/download_yt",
+        "https://codex-production-1.onrender.com/api/download_yt",
         { quality: quality, videoURL: videoURL , vtitle: vtitle},
         {
           headers: {
@@ -60,7 +60,7 @@ const Youtube = () => {
         console.log("✅ Success:", response.data);
         if (response.data.success && response.data.file) {
           const URL = response.data.downloadUrl;
-          const downloadUrl = `http://localhost:7890${URL}`;
+          const downloadUrl = `https://codex-production-1.onrender.com${URL}`;
 
           // 👇 Trigger direct browser download
           // const a = document.createElement("a");
