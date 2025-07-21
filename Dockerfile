@@ -35,6 +35,8 @@ COPY package*.json ./
 RUN npm ci
 COPY . .
 
+RUN npm run build
+
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome-stable
 
 # Optional CMD (Render mostly ignores it)
