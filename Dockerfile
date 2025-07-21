@@ -20,6 +20,8 @@ RUN apt-get update && apt-get install -y \
   libxdamage1 \
   libxrandr2 \
   xdg-utils \
+  python3 \
+  python3-pip \
   --no-install-recommends \
   && apt-get clean && rm -rf /var/lib/apt/lists/*
 
@@ -30,14 +32,18 @@ RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add
   && apt-get install -y google-chrome-stable \
   && rm -rf /var/lib/apt/lists/*
 
+# Install yt-dlp via pip
+RUN pip3 install yt-dlp
+
 WORKDIR /usr/src/app
+
 COPY package*.json ./
 RUN npm ci
+
 COPY . .
 
 RUN npm run build
 
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome-stable
 
-# Optional CMD (Render mostly ignores it)
 CMD ["npm", "start"]

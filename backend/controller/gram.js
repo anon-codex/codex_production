@@ -77,7 +77,7 @@ const downloadInstagramReel = async (req, res) => {
 
     const filename = `reel-${Date.now()}.mp4`;
     const filePath = path.join(downloadsDir, filename);
-    const publicUrl = `http://localhost:7890/downloads/${filename}`;
+    const publicUrl = `https://codex-production-1.onrender.com/downloads/${filename}`;
 
     const writer = fs.createWriteStream(filePath);
     const response = await axios({ url: videoUrl, method: 'GET', responseType: 'stream' });
