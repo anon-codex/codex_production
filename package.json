@@ -20,6 +20,9 @@
     "jsonwebtoken": "^9.0.2",
     "nodemon": "^3.1.10",
     "puppeteer": "^24.14.0",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2",
+    "user-agents": "^1.1.608",
     "uuid": "^11.1.0"
   }
 }

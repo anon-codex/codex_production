@@ -4,7 +4,7 @@ const get_video_qulity = require('../controller/yt_kanu_getvideo');
 const download_yt = require("../controller/yt_kanu");
 const jwt_token = require("../middlerware/jwt_token")
 const {fetchInstagramReelInfo,
-  downloadInstagramReel} = require("../controller/gram");
+  downloadInstagramReel} = require("../controller/insta_grame");
 
 route.post("/getvideo",get_video_qulity);
 route.post("/download_yt",jwt_token,download_yt);
