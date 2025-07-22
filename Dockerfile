@@ -42,6 +42,9 @@ RUN npm ci
 # Copy rest of your app files
 COPY . .
 
+# Build React frontend (assuming it's under /frontend and linked in package.json)
+RUN npm run build
+
 # Set Puppeteer Chromium path (important for Render)
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
 
