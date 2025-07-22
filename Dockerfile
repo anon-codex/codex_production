@@ -1,9 +1,9 @@
 FROM node:20-slim
 
-# Install Chromium and dependencies
+# Install Chrome and dependencies
 RUN apt-get update && apt-get install -y \
   wget \
-  curl \
+  gnupg \
   ca-certificates \
   fonts-liberation \
   libappindicator3-1 \
@@ -20,33 +20,23 @@ RUN apt-get update && apt-get install -y \
   libxdamage1 \
   libxrandr2 \
   xdg-utils \
-  libu2f-udev \
-  libvulkan1 \
-  libxss1 \
-  libgbm1 \
-  chromium \
-  --no-install-recommends && \
-  apt-get clean && rm -rf /var/lib/apt/lists/*
+  --no-install-recommends \
+  && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# ✅ Install yt-dlp binary (safer and faster than pip)
-RUN curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o /usr/local/bin/yt-dlp && \
-    chmod a+rx /usr/local/bin/yt-dlp
+# Install Google Chrome stable
+RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add - \
+  && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list' \
+  && apt-get update \
+  && apt-get install -y google-chrome-stable \
+  && rm -rf /var/lib/apt/lists/*
 
-# Set working directory
 WORKDIR /usr/src/app
-
-# Install Node.js dependencies
 COPY package*.json ./
 RUN npm ci
-
-# Copy rest of your app files
 COPY . .
 
-# Build React frontend (assuming it's under /frontend and linked in package.json)
 RUN npm run build
 
-# Set Puppeteer Chromium path (important for Render)
-ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome-stable
 
-# Start your app
-CMD ["npm", "start"]
+CMD ["npm", "start"] 
