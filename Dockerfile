@@ -1,5 +1,3 @@
-// new 
-
 FROM node:20-slim
 
 # Install Chromium and dependencies
