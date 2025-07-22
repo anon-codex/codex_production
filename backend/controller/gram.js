@@ -14,29 +14,24 @@ const fetchInstagramReelInfo = async (req, res) => {
   }
 
   try {
-    const browser = await puppeteer.launch({
-      args: [
-        "--no-sandbox",
-        "--disable-setuid-sandbox",
-        "--disable-blink-features=AutomationControlled",
-        "--disable-infobars",
-        "--single-process",
-        "--no-zygote",
-      ],
+    // const browser = await puppeteer.launch({
+    //   args: [
+    //     "--no-sandbox",
+    //     "--disable-setuid-sandbox",
+    //     "--disable-blink-features=AutomationControlled",
+    //     "--disable-infobars",
+    //     "--single-process",
+    //     "--no-zygote",
+    //   ],
 
-      executablePath: process.env.PUPPETEER_EXECUTABLE_PATH,
-      headless: true, // or true
-    });
+    //   executablePath: process.env.PUPPETEER_EXECUTABLE_PATH,
+    //   headless: true, // or true
+    // });
+    const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox'],executablePath: process.env.PUPPETEER_EXECUTABLE_PATH, });
     const page = await browser.newPage();
-    await page.setUserAgent(
-      "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
-    );
-    await page.setExtraHTTPHeaders({
-      "Accept-Language": "en-US,en;q=0.9",
-    });
-    await page.setViewport({ width: 1280, height: 800 });
-    await page.goto(videoURL, { waitUntil: "domcontentloaded" });
-    await page.waitForSelector('meta[property="og:video"]', { timeout: 10000 });
+    await page.setUserAgent('Mozilla/5.0 (X11; Linux x86_64)');
+    await page.goto(videoURL, { waitUntil: 'domcontentloaded' });
+    await page.waitForSelector('video', { timeout: 10000 });
 
     const { videoUrl, thumbnail, titleText } = await page.evaluate(() => {
       const video = document.querySelector("video");
