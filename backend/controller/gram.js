@@ -24,7 +24,7 @@ const fetchInstagramReelInfo = async (req, res) => {
     const page = await browser.newPage();
     await page.setUserAgent('Mozilla/5.0 (X11; Linux x86_64)');
     await page.goto(videoURL, { waitUntil: 'domcontentloaded' });
-    await page.waitForSelector('video', { timeout: 6000 });
+    await page.waitForSelector('video', { timeout: 12000 });
 
     const { videoUrl, thumbnail, titleText } = await page.evaluate(() => {
       const video = document.querySelector("video");
