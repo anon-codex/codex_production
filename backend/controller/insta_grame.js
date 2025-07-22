@@ -24,15 +24,15 @@ const fetchInstagramReelInfo = async (req, res) => {
       headless: true,
       executablePath: process.env.PUPPETEER_EXECUTABLE_PATH,
       args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--disable-infobars',
-        '--window-position=0,0',
-        '--ignore-certifcate-errors',
-        '--ignore-certifcate-errors-spki-list',
-        '--disable-blink-features=AutomationControlled',
-        '--single-process',
-        '--no-zygote'
+        "--no-sandbox",
+        "--disable-setuid-sandbox",
+        "--disable-infobars",
+        "--window-position=0,0",
+        "--ignore-certifcate-errors",
+        "--ignore-certifcate-errors-spki-list",
+        "--disable-blink-features=AutomationControlled",
+        "--single-process",
+        "--no-zygote",
       ],
     });
 
@@ -47,16 +47,26 @@ const fetchInstagramReelInfo = async (req, res) => {
 
     // Remove webdriver flag
     await page.evaluateOnNewDocument(() => {
-      Object.defineProperty(navigator, 'webdriver', {
+      Object.defineProperty(navigator, "webdriver", {
         get: () => false,
       });
     });
 
     // ⏱️ Random Delay (to simulate human)
-    await new Promise(r => setTimeout(r, Math.floor(Math.random() * 3000) + 2000));
+    await new Promise((r) =>
+      setTimeout(r, Math.floor(Math.random() * 3000) + 2000)
+    );
 
-    await page.goto(videoURL, { waitUntil: 'domcontentloaded', timeout: 30000 });
-    await page.waitForSelector('video', { timeout: 12000 });
+    const randomGotoTimeout =
+      Math.floor(Math.random() * (40000 - 25000 + 1)) + 25000;
+
+    await page.goto(videoURL, {
+      waitUntil: "domcontentloaded",
+      timeout: randomGotoTimeout,
+    });
+    const randomTimeout = Math.floor(Math.random() * (15000 - 9000 + 1)) + 9000;
+
+    await page.waitForSelector("video", { timeout: randomTimeout });
 
     const { videoUrl, thumbnail, titleText } = await page.evaluate(() => {
       const video = document.querySelector("video");
@@ -85,10 +95,11 @@ const fetchInstagramReelInfo = async (req, res) => {
       thumbnail,
       jwt_token: token,
     });
-
   } catch (err) {
     console.error("[Fetch Error]", err.message);
-    return res.status(500).json({ error: "Failed to fetch Instagram reel metadata" });
+    return res
+      .status(500)
+      .json({ error: "Failed to fetch Instagram reel metadata" });
   }
 };
 
