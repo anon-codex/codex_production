@@ -3,6 +3,7 @@ FROM node:20-slim
 # Install Chromium and dependencies
 RUN apt-get update && apt-get install -y \
   wget \
+  curl \
   ca-certificates \
   fonts-liberation \
   libappindicator3-1 \
@@ -23,14 +24,13 @@ RUN apt-get update && apt-get install -y \
   libvulkan1 \
   libxss1 \
   libgbm1 \
-  python3 \
-  python3-pip \
   chromium \
   --no-install-recommends && \
   apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Install yt-dlp via pip (more updated)
-RUN pip install yt-dlp
+# ✅ Install yt-dlp binary (safer and faster than pip)
+RUN curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o /usr/local/bin/yt-dlp && \
+    chmod a+rx /usr/local/bin/yt-dlp
 
 # Set working directory
 WORKDIR /usr/src/app
@@ -39,14 +39,11 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 RUN npm ci
 
-# Copy rest of the files
+# Copy rest of your app files
 COPY . .
 
-# Build React frontend (assuming it's under /frontend and linked in package.json)
-RUN npm run build
-
-# Set Puppeteer executable path
+# Set Puppeteer Chromium path (important for Render)
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
 
-# Start the Node.js app
+# Start your app
 CMD ["npm", "start"]
