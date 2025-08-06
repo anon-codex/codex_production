@@ -1,8 +1,30 @@
-
-
 const axios = require('axios');
 require('dotenv').config();
 
+
+
+function extractInstagramStoryId(url) {
+  try {
+    const urlObj = new URL(url);
+    const mediaId = urlObj.searchParams.get("story_media_id");
+
+    if (!mediaId) {
+      throw new Error("story_media_id not found in URL");
+    }
+
+    return mediaId;
+  } catch (err) {
+    console.error("❌ Invalid URL:", err.message);
+    return null;
+  }
+}
+
+
+
+
+
+
+// ✅ Secure validation function
 function validateSafeURL(url) {
   if (!url || typeof url !== "string") return false;
 
@@ -12,36 +34,41 @@ function validateSafeURL(url) {
     if (trimmed.includes(bad)) return false;
   }
 
-  const allowedPattern =
-    /^(https?:\/\/)(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/|instagram\.com\/reel\/|linkedin\.com\/)/i;
+const allowedPattern = /^(https?:\/\/)?(www\.)?instagram\.com\/s\/[a-zA-Z0-9_-]+\?story_media_id=\d+(_\d+)?(&.*)?$/i;
+
+
   if (!allowedPattern.test(trimmed)) return false;
 
   try {
-    const parsedUrl = new URL(trimmed);
-    if (!["http:", "https:"].includes(parsedUrl.protocol)) return false;
-  } catch (e) {
+    const parsed = new URL(trimmed);
+    if (!["http:", "https:"].includes(parsed.protocol)) return false;
+  } catch {
     return false;
   }
 
   return true;
 }
 
-const Insta_api = async (req, res) => {
+// ✅ Express controller
+const Insta_highlights = async (req, res) => {
+     console.log("ho gayi hit")
+
   const ur = process.env.API_URL;
   const apiKey = process.env.API_TOKEN;
-
+  
   const { video_url } = req.body;
-
-  if (!video_url || !validateSafeURL(video_url)) {
+  const profile_name = await extractInstagramStoryId(video_url);
+  if (!video_url || !validateSafeURL(video_url) || profile_name == null) {
     return res.status(400).json({
-      message: "❌ Video URL is required in request body.",
+      message: "❌ Please enter a valid Instagram story URL.",
       success: false
     });
   }
 
   const data = {
     video_url,
-    type: "instagram",
+    type:"insta_highlight",
+    user_id:profile_name,
   };
 
   try {
@@ -54,28 +81,21 @@ const Insta_api = async (req, res) => {
 
     
 
-    const result = response.data;
-
-    if (
-      result &&
-      result.data &&
-      Array.isArray(result.data) &&
-      result.data.length > 0
-    ) {
+    if (response.data) {
       return res.status(200).json({
-        message: "✅ Video fetched successfully.",
+        message: "✅ Story fetched successfully.",
         success: true,
-        data: result.data,
+        data: response.data,
       });
     } else {
       return res.status(404).json({
-        message: "⚠️ No video data found. Please check the link.",
+        message: "⚠️ No Story data found. Please check the link.",
         success: false
       });
     }
 
   } catch (err) {
-    console.error("API Error:", err.message);
+    console.error("Instagram API Error:", err.message);
 
     if (err.response) {
       if (err.response.status === 429) {
@@ -88,7 +108,7 @@ const Insta_api = async (req, res) => {
           message: "🔐 Invalid API key or unauthorized access.",
           success: false
         });
-      } else if (err.response.data && err.response.data.message) {
+      } else if (err.response.data?.message) {
         return res.status(500).json({
           message: `❌ ${err.response.data.message}`,
           success: false
@@ -113,4 +133,7 @@ const Insta_api = async (req, res) => {
   }
 };
 
-module.exports = Insta_api;
+module.exports = Insta_highlights;
+
+
+

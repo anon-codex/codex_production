@@ -4,9 +4,27 @@ require('dotenv').config();
 const cors = require('cors');
 const PORT = process.env.PORT || 7890;
 const route = require("./routes/route");
+const fs = require('fs');
+const path = require('path');
+const blockSuspicious = require('./middlewares/blockSuspicious');
+
+
 
 // ✅ Allow only requests from grabshort.online
 const allowedOrigin = "https://www.grabshort.online";
+
+const deleteOldFilesFromDownloads = require('./cleanup');
+setInterval(deleteOldFilesFromDownloads, 60 * 1000);
+
+
+
+app.use('/downloads', express.static(path.join(__dirname, 'downloads'), {
+  setHeaders: (res, filePath) => {
+    res.setHeader('Content-Disposition', 'attachment');
+  }
+}));
+
+//Note :-  these are the most Important code.... 
 
 const corsOptions = {
   origin: function (origin, callback) {
@@ -21,6 +39,17 @@ const corsOptions = {
 
 // ✅ Apply CORS to all routes
 app.use(cors(corsOptions));
+// Use before all routes
+
+app.use(blockSuspicious({
+  blockDurationMs: 10 * 60 * 1000,      // 10 min block
+  maxRequestsPerMinute: 100,
+  allowedOrigins: ['https://www.grabshort.online', 'https://grabshort.online'],
+  allowedIPs: [],                       // agar koi IP whitelist karni ho to yahan add karo
+  allowedUserAgentsSubstr: [
+    'mozilla', 'chrome', 'safari', 'firefox', 'edge', 'opera', 'android', 'iphone'
+  ]
+}));
 
 app.use(express.json())
 app.use("/api",route);
