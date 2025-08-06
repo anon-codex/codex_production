@@ -10,6 +10,24 @@ if (!fs.existsSync(DOWNLOAD_DIR)) fs.mkdirSync(DOWNLOAD_DIR);
 
 
 // 🔍 Extract username from profile URL
+// function extractInstagramUsername(url) {
+//   try {
+//     const parsedUrl = new URL(url);
+//     const hostname = parsedUrl.hostname.toLowerCase();
+
+//     if (!hostname.includes("instagram.com")) return null;
+
+//     const pathname = parsedUrl.pathname.split('/').filter(Boolean);
+//     if (pathname.length === 1 && !["p", "reel", "tv", "stories"].includes(pathname[0])) {
+//       return pathname[0];
+//     }
+
+//     return null;
+//   } catch (err) {
+//     return null;
+//   }
+// }
+
 function extractInstagramUsername(url) {
   try {
     const parsedUrl = new URL(url);
@@ -18,7 +36,12 @@ function extractInstagramUsername(url) {
     if (!hostname.includes("instagram.com")) return null;
 
     const pathname = parsedUrl.pathname.split('/').filter(Boolean);
-    if (pathname.length === 1 && !["p", "reel", "tv", "stories"].includes(pathname[0])) {
+
+    // If it's a profile URL, return the username (not reel, tv, p, stories, etc.)
+    if (
+      pathname.length === 1 &&
+      !["p", "reel", "tv", "stories", "explore", "directory"].includes(pathname[0])
+    ) {
       return pathname[0];
     }
 
@@ -27,6 +50,7 @@ function extractInstagramUsername(url) {
     return null;
   }
 }
+
 
 
 // 🔐 URL validation
@@ -75,7 +99,9 @@ const Insta_profile_api = async (req, res) => {
   const ur = process.env.API_URL;
   const apiKey = process.env.API_TOKEN;
 
+  // const  video_url  = "neoo_nerd";
   const { video_url } = req.body;
+
   const profile_name = extractInstagramUsername(video_url);
   // !validateSafeURL(video_url)
 
