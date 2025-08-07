@@ -113,7 +113,7 @@ const Insta_profile_api = async (req, res) => {
   }
 
   const data = {
-    video_url,
+    profile_name,
     type: "profile_pic",
     user_id:profile_name,
   };
