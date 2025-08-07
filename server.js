@@ -11,7 +11,7 @@ const blockSuspicious = require('./middlewares/blockSuspicious');
 
 
 // ✅ Allow only requests from grabshort.online
-const allowedOrigin = "https://www.grabshort.online";
+// const allowedOrigin = "https://www.grabshort.online";
 
 const deleteOldFilesFromDownloads = require('./cleanup');
 setInterval(deleteOldFilesFromDownloads, 60 * 1000);
@@ -26,19 +26,19 @@ app.use('/downloads', express.static(path.join(__dirname, 'downloads'), {
 
 //Note :-  these are the most Important code.... 
 
-const corsOptions = {
-  origin: function (origin, callback) {
-    if (!origin || origin === allowedOrigin) {
-      callback(null, true);
-    } else {
-      callback(new Error("CORS policy: Not allowed by server"));
-    }
-  },
-  optionsSuccessStatus: 200, // for legacy browser support
-};
+// const corsOptions = {
+//   origin: function (origin, callback) {
+//     if (!origin || origin === allowedOrigin) {
+//       callback(null, true);
+//     } else {
+//       callback(new Error("CORS policy: Not allowed by server"));
+//     }
+//   },
+//   optionsSuccessStatus: 200, // for legacy browser support
+// };
 
 // ✅ Apply CORS to all routes
-app.use(cors(corsOptions));
+app.use(cors());
 // Use before all routes
 
 app.use(blockSuspicious({
