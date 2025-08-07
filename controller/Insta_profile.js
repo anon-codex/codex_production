@@ -9,26 +9,8 @@ const DOWNLOAD_DIR = path.join(__dirname, '../downloads');
 if (!fs.existsSync(DOWNLOAD_DIR)) fs.mkdirSync(DOWNLOAD_DIR);
 
 
-// 🔍 Extract username from profile URL
-// function extractInstagramUsername(url) {
-//   try {
-//     const parsedUrl = new URL(url);
-//     const hostname = parsedUrl.hostname.toLowerCase();
 
-//     if (!hostname.includes("instagram.com")) return null;
-
-//     const pathname = parsedUrl.pathname.split('/').filter(Boolean);
-//     if (pathname.length === 1 && !["p", "reel", "tv", "stories"].includes(pathname[0])) {
-//       return pathname[0];
-//     }
-
-//     return null;
-//   } catch (err) {
-//     return null;
-//   }
-// }
-
-function extractInstagramUsername(url) {
+async function extractInstagramUsername(url) {
   try {
     const parsedUrl = new URL(url);
     const hostname = parsedUrl.hostname.toLowerCase();
@@ -102,7 +84,7 @@ const Insta_profile_api = async (req, res) => {
   // const  video_url  = "neoo_nerd";
   const { video_url } = req.body;
 
-  const profile_name = extractInstagramUsername(video_url);
+  const profile_name = await extractInstagramUsername(video_url);
   // !validateSafeURL(video_url)
 
   if (!video_url || profile_name == null) {
