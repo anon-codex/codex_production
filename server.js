@@ -19,40 +19,40 @@ app.use('/downloads', express.static(path.join(__dirname, 'downloads'), {
   }
 }));
 
-app.use(cors());
+// app.use(cors());
 
-// yhaa se ----------
+// start ----------
 
-// // ✅ Allow only requests from grabshort.online
-// const allowedOrigin = "https://www.grabshort.online";
+// ✅ Allow only requests from grabshort.online
+const allowedOrigin = "https://www.grabshort.online";
 
-// // ✅ CORS options
-// const corsOptions = {
-//   origin: function (origin, callback) {
-//     if (!origin || origin === allowedOrigin) {
-//       callback(null, true);
-//     } else {
-//       callback(new Error("CORS policy: Not allowed by server"));
-//     }
-//   },
-//   optionsSuccessStatus: 200, // for legacy browser support
-// };
+// ✅ CORS options
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin || origin === allowedOrigin) {
+      callback(null, true);
+    } else {
+      callback(new Error("CORS policy: Not allowed by server"));
+    }
+  },
+  optionsSuccessStatus: 200, // for legacy browser support
+};
 
-// // ✅ Apply CORS with options
-// app.use(cors(corsOptions));
+// ✅ Apply CORS with options
+app.use(cors(corsOptions));
 
-// // ✅ Block suspicious requests
-// app.use(blockSuspicious({
-//   blockDurationMs: 10 * 60 * 1000,      // 10 min block
-//   maxRequestsPerMinute: 100,
-//   allowedOrigins: ['https://www.grabshort.online', 'https://grabshort.online'],
-//   allowedIPs: [],                       // agar koi IP whitelist karni ho to yahan add karo
-//   allowedUserAgentsSubstr: [
-//     'mozilla', 'chrome', 'safari', 'firefox', 'edge', 'opera', 'android', 'iphone'
-//   ]
-// }));
+// ✅ Block suspicious requests
+app.use(blockSuspicious({
+  blockDurationMs: 10 * 60 * 1000,      // 10 min block
+  maxRequestsPerMinute: 100,
+  allowedOrigins: ['https://www.grabshort.online', 'https://grabshort.online'],
+  allowedIPs: [],                       // agar koi IP whitelist karni ho to yahan add karo
+  allowedUserAgentsSubstr: [
+    'mozilla', 'chrome', 'safari', 'firefox', 'edge', 'opera', 'android', 'iphone'
+  ]
+}));
 
-// yhaa tak ----------
+// End ----------
 
 app.use(express.json())
 app.use("/api", route);
