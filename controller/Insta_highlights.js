@@ -51,7 +51,6 @@ const allowedPattern = /^(https?:\/\/)?(www\.)?instagram\.com\/s\/[a-zA-Z0-9_-]+
 
 // ✅ Express controller
 const Insta_highlights = async (req, res) => {
-     console.log("ho gayi hit")
 
   const ur = process.env.API_URL;
   const apiKey = process.env.API_TOKEN;

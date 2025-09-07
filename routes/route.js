@@ -6,6 +6,7 @@ const { fetchPinterestVideo, downloadPinterestVideo } = require("../controller/P
 const Insta_profile_api = require("../controller/Insta_profile");
 const Insta_story_api = require("../controller/Insta_story");
 const insta_highlight = require("../controller/Insta_highlights");
+const facebook_api = require("../controller/facedow");
 
 
 route.post("/insta",Insta_api);
@@ -15,6 +16,7 @@ route.get("/download", downloadPinterestVideo);
 route.post("/insta_profile_api", Insta_profile_api);
 route.post("/insta_story_api",Insta_story_api);
 route.post("/insta_highlight_api",insta_highlight);
+route.post("/facedow",facebook_api);
 
 
 
