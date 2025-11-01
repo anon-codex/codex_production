@@ -59,7 +59,7 @@ const Insta_highlights = async (req, res) => {
   const profile_name = await extractInstagramStoryId(video_url);
   if (!video_url || !validateSafeURL(video_url) || profile_name == null) {
     return res.status(400).json({
-      message: "❌ Please enter a valid Instagram story URL.",
+      message: "❌ Please enter a valid Instagram highlights URL.",
       success: false
     });
   }
